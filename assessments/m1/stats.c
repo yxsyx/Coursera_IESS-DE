@@ -9,13 +9,13 @@
  *
  *****************************************************************************/
 /**
- * @file <Add File Name> 
- * @brief <Add Brief Description Here >
+ * @file stats.c 
+ * @brief Implement functions to process a given integer array like sorting, find
+ * median, find mean value, find maximum, find minimum and print the result. Use a
+ * simple driver to test all functions.
  *
- * <Add Extended Description Here>
- *
- * @author <Add FirsName LastName>
- * @date <Add date >
+ * @author Youxi Shao
+ * @date 05/16/2019
  *
  */
 
@@ -23,6 +23,7 @@
 
 #include <stdio.h>
 #include "stats.h"
+
 
 /* Size of the Data Set */
 #define SIZE (40)
@@ -36,8 +37,40 @@ void main() {
                                 7,  87, 250, 230,  99,   3, 100,  90};
 
   /* Other Variable Declarations Go Here */
+  int median;
+  int mean;
+  int maximum;
+  int minimum;
+  int sorted_array[SIZE];
   /* Statistics and Printing Functions Go Here */
+  printf("The original array is: ");
+  print_array(test, SIZE);
+  print_statistics(test, SIZE);
 
 }
 
 /* Add other Implementation File Code Here */
+void print_statistics() {
+
+}
+
+void print_array(int a[], int size) {
+
+}
+
+int find_median(int a[], int size) {
+
+}
+
+int find_mean(int a[], int size) {
+
+}
+
+int find_maximum(int a[], int size) {
+
+}
+
+int find_minimum(int a[], int size) {
+	
+}
+
