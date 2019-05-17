@@ -37,40 +37,92 @@ void main() {
                                 7,  87, 250, 230,  99,   3, 100,  90};
 
   /* Other Variable Declarations Go Here */
-  int median;
-  int mean;
-  int maximum;
-  int minimum;
-  int sorted_array[SIZE];
+  unsigned char median;
+  unsigned char mean;
+  unsigned char maximum;
+  unsigned char minimum;
   /* Statistics and Printing Functions Go Here */
-  printf("The original array is: ");
+  printf("The original array is:\n");
   print_array(test, SIZE);
-  print_statistics(test, SIZE);
+  sort_array(test, SIZE);
+  median = find_median(test, SIZE);
+  mean = find_mean(test, SIZE);
+  maximum = find_maximum(test, SIZE);
+  minimum = find_minimum(test, SIZE);
+  printf("The sorted array is:\n");
+  print_array(test, SIZE);
+  print_statistics(median, mean, maximum, minimum);
 
 }
 
 /* Add other Implementation File Code Here */
-void print_statistics() {
-
+void print_statistics(unsigned char median, unsigned char mean, 
+					  unsigned char maximum, unsigned char minimum) {
+  printf("The median value of this array is %d.\nThe mean value of ", median);
+  printf("this array is %d.\nThe maximum value of this array is ", mean);
+  printf("%d.\nThe minimum value of this array is %d.\n", maximum, minimum);
 }
 
-void print_array(int a[], int size) {
-
+void print_array(unsigned char a[], int size) {
+  int i;
+  for (i = 0; i < SIZE; i++) {
+  	if ((i + 1) % 8 != 0)
+  		printf("%3d, ", a[i]);
+  	else
+  		printf("%3d\n", a[i]);
+  }
 }
 
-int find_median(int a[], int size) {
-
+unsigned char find_median(unsigned char a[], int size) {
+  int med;
+  if (SIZE % 2 != 0)
+  	med = a[(SIZE + 1) / 2];
+  else
+  	med = (a[SIZE / 2] + a[SIZE / 2 + 1]) / 2;
+  return med;
 }
 
-int find_mean(int a[], int size) {
-
+unsigned char find_mean(unsigned char a[], int size) {
+  unsigned char total = 0;
+  int i;
+  for (i = 0; i < SIZE; i++) {
+  	total += a[i];
+  	//total /= SIZE;
+  }
+  return total;
 }
 
-int find_maximum(int a[], int size) {
-
+unsigned char find_maximum(unsigned char a[], int size) {
+  unsigned char max = a[0];
+  int i;
+  for (i = 0; i < SIZE - 1; i++) {
+  	if (a[i + 1] > max)
+  		max = a[i];
+  }
+  return max;
 }
 
-int find_minimum(int a[], int size) {
-	
+unsigned char find_minimum(unsigned char a[], int size) {
+  int min = a[0];
+  int i;
+  for (i = 0; i < SIZE - 1; i++) {
+  	if (a[i + 1] < min)
+  		min = a[i];
+  }
+  return min;
 }
 
+void sort_array(unsigned char a[], int size) {
+  int i;
+  int j;
+  unsigned char temp;
+  for (i = 0; i < SIZE - 1; i++) {
+  	for (j = i; j < SIZE; j++) {
+  		if (a[i] < a[j]) {
+  			temp = a[i];
+  			a[i] = a[j];
+  			a[j] = temp;
+  		}
+  	}
+  }
+}
