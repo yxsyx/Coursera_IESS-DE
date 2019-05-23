@@ -29,6 +29,9 @@
 #------------------------------------------------------------------------------
 include sources.mk
 
+# Platform Overrides
+PLATFORM = $(shell)
+
 # Architecture Specific Flags
 CPU = cortex-m0plus
 ARCH = thumb
@@ -38,16 +41,45 @@ SPECS = nosys.specs
 LINKER_FILE = MKL25Z128xxx4_flash.ld 
 
 # Compile Defines
-CC = arm-none-eabi-gcc
+#CC = arm-none-eabi-gcc
+ifeq ($(PLATFORM), HOST)
+	CC = gcc
+else
+	CC = arm-none-eabi-gcc
+endif
 LD = arm-none-eabi-ld
 TARGET = demo
-LDFLAGS = -Wl,-Map=$(TARGET).map -T $(LINKER_FILE)
-CFLAGS = -mcpu=$(CPU) -m$(ARCH) --specs=$(SPECS) -Wall
-
+ifeq ($(PLATFORM), HOST)
+else
+	LDFLAGS = -Wl,-Map=$(TARGET).map -T $(LINKER_FILE)
+endif
+ifeq ($(PLATFORM), HOST)
+	CFLAGS = -Wall -Werror -g -O0 -std=c99
+else
+	CFLAGS = -mcpu=$(CPU) -m$(ARCH) --specs=$(SPECS) -Wall -Werror -g -O0 -std=c99 -D$(PLATFORM)
+endif
+CPPFLAGS = -E -MD
+ASMFLAGS = -S
+PREPRO = $(SRCS:.c=.i)
+DEPEND = $(SRCS:.c=.d)
+ASSEMBLY = $(SRC:.c=.asm)
 OBJS = $(SRCS:.c=.o)
 
-%.o : %.c
+%.i: %.c
+	$(CC) $(CPPFLAGS) $< -o $@
+
+%.asm: %.c
+	$(CC) $(ASMFLAGS) $< -o $@
+
+$(TARGET).asm: $(TARGET).out
+	$(CC) $(ASMFLAGS) $< -o $@
+
+%.o: %.c
 	$(CC) -c $< $(CFLAGS) -o $@
+
+.PHONY: compile-all
+compile-all: $(OBJS)
+
 
 .PHONY: build
 build: all
@@ -60,5 +92,5 @@ $(TARGET).out: $(OBJS)
 
 .PHONY: clean
 clean:
-	rm -f $(OBJS) $(TARGET).out $(TARGET).map
+	rm -f $(PREPRO) $(DEPEND) *.asm $(OBJS) $(TARGET).out $(TARGET).map
 
